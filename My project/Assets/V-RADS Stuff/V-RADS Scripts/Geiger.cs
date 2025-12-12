@@ -1,69 +1,82 @@
 using UnityEngine;
-using UnityEngine.XR.Interaction.Toolkit;
+using System.Collections.Generic; // Required for Lists
+using UnityEngine.XR.Interaction.Toolkit.Interactors;
+using UnityEngine.XR.Interaction.Toolkit.Interactables; // Updated namespace for Unity 6
 
-public class GeigerCounter : MonoBehaviour
+public class Geiger : MonoBehaviour
 {
     [Header("Setup")]
-    public Transform radiationSource;
+    // We hide this list because we fill it automatically in Start()
+    private List<RadiationHazard> allHazards = new List<RadiationHazard>();
     public AudioSource audioSource;
 
-    [Header("Physics Settings")]
-    [Tooltip("How strong is the radiation? (Try 10 to start)")]
-    public float sourceStrength = 10.0f;
-
-    // We clamp the distance so we don't divide by zero!
-    private float minDistance = 0.1f;
-
     [Header("Geiger Feedback")]
-    public float maxClickDelay = 1.0f; // Slow clicking (Safe)
-    public float minClickDelay = 0.05f; // Fast buzzing (Danger)
+    public float maxClickDelay = 3.0f;
+    public float minClickDelay = 0.05f;
 
     private float nextClickTime = 0f;
-    private UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable grabInteractable;
+    private XRGrabInteractable grabInteractable;
 
     void Awake()
     {
-        grabInteractable = GetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+        grabInteractable = GetComponent<XRGrabInteractable>();
+    }
+
+    void Start()
+    {
+        // 1. FIND ALL HAZARDS AUTOMATICALLY
+        // We look for every object in the scene that has the 'RadiationHazard' script
+        RadiationHazard[] foundHazards = FindObjectsByType<RadiationHazard>(FindObjectsSortMode.None);
+
+        // Add them to our main list so Update can see them
+        allHazards.AddRange(foundHazards);
     }
 
     void Update()
     {
-        if (radiationSource == null) return;
+        // Stop if not held
+        if (grabInteractable == null || !grabInteractable.isSelected) return;
 
-        // 1. CALCULATE DISTANCE (With Physics Clamp)
-        float distance = Vector3.Distance(transform.position, radiationSource.position);
-        distance = Mathf.Max(distance, minDistance);
+        // 2. RESET TOTAL INTENSITY
+        float totalIntensity = 0f;
 
-        // 2. INVERSE SQUARE LAW
-        float intensity = sourceStrength / (distance * distance);
+        // 3. LOOP THROUGH HAZARDS
+        foreach (RadiationHazard hazard in allHazards)
+        {
+            if (hazard == null) continue; // Skip if a barrel was deleted
 
-        // 3. CALCULATE DELAY
-        // We calculate the base speed
-        float targetDelay = Mathf.Clamp(1.0f / intensity, minClickDelay, maxClickDelay);
+            // Calculate distance from THIS TOOL (transform.position) to the hazard
+            float dist = Vector3.Distance(transform.position, hazard.transform.position);
+            dist = Mathf.Max(dist, 0.1f); // Safety clamp
 
-        // 4. TRIGGER CLICK
+            // Add this barrel's radiation to the total sum
+            totalIntensity += hazard.strength / (dist * dist);
+        }
+
+        // 4. CLICK LOGIC (Using Total Intensity)
+        // If totalIntensity is 0 (safe), we treat it as very low to avoid divide by zero
+        if (totalIntensity <= 0.001f) totalIntensity = 0.001f;
+
+        float targetDelay = Mathf.Clamp(1.0f / totalIntensity, minClickDelay, maxClickDelay);
+
         if (Time.time >= nextClickTime)
         {
-            PlayClick(intensity);
+            // YES! Pass totalIntensity here.
+            PlayClick(totalIntensity);
 
-            // REALISM TRICK:
-            // Add a tiny random variation to the time so it's not a perfect metronome.
-            // Random.Range(0, 0.1f) makes it hesitate slightly sometimes.
             float randomFactor = Random.Range(0f, targetDelay * 0.2f);
-
             nextClickTime = Time.time + targetDelay + randomFactor;
         }
     }
 
     void PlayClick(float intensity)
     {
+        if (intensity <= 0.01f) return;
         audioSource.pitch = Random.Range(0.95f, 1.05f);
         audioSource.PlayOneShot(audioSource.clip);
 
-        // Map intensity to haptic strength (0.0 to 1.0) for the controller
-        // We clamp it because intensity can go really high in the Inverse Square law
+        // Haptics also use the total intensity
         float hapticStrength = Mathf.Clamp01(intensity / 10.0f);
-
         TriggerHaptics(hapticStrength);
     }
 
@@ -72,7 +85,7 @@ public class GeigerCounter : MonoBehaviour
         if (grabInteractable != null && grabInteractable.isSelected)
         {
             var hand = grabInteractable.interactorsSelecting[0];
-            if (hand is UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInputInteractor controllerInteractor)
+            if (hand is XRBaseInputInteractor controllerInteractor)
             {
                 controllerInteractor.SendHapticImpulse(strength, 0.1f);
             }
