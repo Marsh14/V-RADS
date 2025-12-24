@@ -16,12 +16,15 @@ public class RadiationHazard : MonoBehaviour
     private bool isFixed = false;
     private Renderer objRenderer;
     private AudioSource audioSource;
+    private HazardManager cachedManager;
+    private GameObject spawnedUI;
 
     void Awake()
     {
         initialStrength = strength;
         objRenderer = GetComponent<Renderer>();
         audioSource = GetComponent<AudioSource>();
+        cachedManager = FindAnyObjectByType<HazardManager>();
     }
 
     // Called by the Geiger Counter / Health Script to randomize the game
@@ -38,11 +41,10 @@ public class RadiationHazard : MonoBehaviour
             isFixed = true;
         }
     }
-
-    // Called when you click/select the barrel
     public void FixHazard()
     {
-        if (isFixed) return;
+        if (isFixed) return; // If already fixed (or wasn't active), stop here.
+
         isFixed = true;
 
         // 1. Kill Radiation
@@ -54,19 +56,34 @@ public class RadiationHazard : MonoBehaviour
             objRenderer.material = safeMaterial;
         }
 
-        // 3. Spawn the Success UI
+        // 3. Spawn Success UI (Keep your existing code here)
         if (uiPrefab != null)
         {
             Vector3 spawnPos = transform.position + (Vector3.up * heightOffset);
-            Instantiate(uiPrefab, spawnPos, Quaternion.identity);
+            spawnedUI = Instantiate(uiPrefab, spawnPos, Quaternion.identity);
+
         }
 
-        // 4. Play Sound (Optional)
+        // 4. Play Sound
         if (audioSource != null && audioSource.clip != null)
         {
             audioSource.PlayOneShot(audioSource.clip);
         }
 
-        Debug.Log("Hazard Neutralized!");
+        if (cachedManager != null)
+        {
+            cachedManager.RegisterFixedHazard();
+        }
+        else
+        {
+            Debug.LogWarning("No HazardManager found!");
+        }
+    }
+    public void DestroyPopup()
+    {
+        if (spawnedUI != null)
+        {
+            Destroy(spawnedUI);
+        }
     }
 }

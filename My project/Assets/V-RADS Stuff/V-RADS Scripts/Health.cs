@@ -31,7 +31,7 @@ public class Health : MonoBehaviour
     {
         if (isGameOver) return;
 
-        // ... (Your existing radiation calculation code stays exactly the same) ...
+        
         float totalIntensity = 0f;
         Vector3 headPos = Camera.main.transform.position;
         foreach (RadiationHazard hazard in allHazards)
