@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     // Optional: Drag "Snap Turn" here if you want to stop them from turning too
     public UnityEngine.XR.Interaction.Toolkit.Locomotion.Turning.SnapTurnProvider turnProvider;
 
+    public string gameSceneName = "Title";
+
     public void EndGame()
     {
         // 1. Disable Joystick Movement
@@ -31,5 +33,9 @@ public class GameManager : MonoBehaviour
     {
         // Reloads the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+    public void MenuGame()
+    {
+        SceneManager.LoadScene(gameSceneName);
     }
 }
