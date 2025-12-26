@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
+// This script simulates a Geiger counter that clicks faster with higher radiation levels
 public class Geiger : MonoBehaviour
 {
     [Header("Setup")]
@@ -14,18 +15,20 @@ public class Geiger : MonoBehaviour
     public float minClickDelay = 0.05f;
 
     [Tooltip("Higher number = Slower clicking for the same radiation. Try 10 or 20.")]
-    public float sensitivity = 5.0f; // <--- NEW VARIABLE
+    public float sensitivity = 5.0f; 
 
     private float nextClickTime = 0f;
     private XRGrabInteractable grabInteractable;
 
     void Awake()
     {
+        // Get reference to XRGrabInteractable
         grabInteractable = GetComponent<XRGrabInteractable>();
     }
 
     void Start()
     {
+        // Find all RadiationHazard objects in the scene
         RadiationHazard[] foundHazards = FindObjectsByType<RadiationHazard>(FindObjectsSortMode.None);
         allHazards.AddRange(foundHazards);
     }
@@ -36,25 +39,28 @@ public class Geiger : MonoBehaviour
 
         float totalIntensity = 0f;
 
+        // Calculate total radiation intensity at this position
         foreach (RadiationHazard hazard in allHazards)
         {
             if (hazard == null) continue;
 
+            // Calculate distance to hazard, makes sure we don't divide by zero
             float dist = Vector3.Distance(transform.position, hazard.transform.position);
             dist = Mathf.Max(dist, 0.1f);
 
+            // Inverse square law for radiation intensity
             totalIntensity += hazard.strength / (dist * dist);
         }
 
-        // --- THE FIX IS HERE ---
+        // Prevent division by zero
         if (totalIntensity <= 0.001f) totalIntensity = 0.001f;
 
-        // Instead of 1.0f / totalIntensity, we use sensitivity / totalIntensity
-        // If sensitivity is 15, the delay is 15x longer (slower clicks).
+        // Determine target delay based on intensity and sensitivity
         float targetDelay = Mathf.Clamp(sensitivity / totalIntensity, minClickDelay, maxClickDelay);
 
         if (Time.time >= nextClickTime)
         {
+            // Play click sound and haptics
             PlayClick(totalIntensity);
 
             float randomFactor = Random.Range(0f, targetDelay * 0.2f);
@@ -67,6 +73,7 @@ public class Geiger : MonoBehaviour
         // Don't play if barely any radiation (prevents single random clicks far away)
         if (intensity <= 0.1f) return;
 
+        // Randomize pitch slightly for variety
         audioSource.pitch = Random.Range(0.95f, 1.05f);
         audioSource.PlayOneShot(audioSource.clip);
 
@@ -74,6 +81,7 @@ public class Geiger : MonoBehaviour
         TriggerHaptics(hapticStrength);
     }
 
+    // Triggers haptic feedback on the controller holding the Geiger counter
     void TriggerHaptics(float strength)
     {
         if (grabInteractable != null && grabInteractable.isSelected)

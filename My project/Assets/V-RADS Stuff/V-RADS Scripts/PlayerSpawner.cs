@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+// This script moves the player to a specified spawn point at the start of the game
 public class PlayerSpawner : MonoBehaviour
 {
     [Header("Assign in Inspector")]
@@ -29,7 +30,7 @@ public class PlayerSpawner : MonoBehaviour
             characterController.enabled = false;
         }
 
-        // Now move (Safely)
+        // Now move
         transform.position = spawnPoint.position;
         transform.rotation = spawnPoint.rotation;
 

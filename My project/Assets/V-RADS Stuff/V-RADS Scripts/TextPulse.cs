@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 
+// This script makes the title text object pulse in size.
 public class TextPulse : MonoBehaviour
 {
     public float speed = 2f;
@@ -15,6 +16,7 @@ public class TextPulse : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Calculate the scale based on a sine wave (Lerp between minSize and maxSize)
         float scale = Mathf.Lerp(minSize, maxSize, (Mathf.Sin(Time.time * speed) + 1.0f) / 2.0f);
         transform.localScale = new Vector3(scale, scale, scale);
     }

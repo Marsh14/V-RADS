@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// This script was a first prototype for hazards (not used anymore)
 public class BarrelHazard : MonoBehaviour
 {
     [Header("Visuals")]
@@ -13,7 +14,6 @@ public class BarrelHazard : MonoBehaviour
     public AudioClip successSound;
 
     [Header("Logic")]
-    // NEW: Reference to the radiation data so we can turn it off
     public RadiationHazard radiationHazard;
 
     private bool isMarked = false;
@@ -23,7 +23,7 @@ public class BarrelHazard : MonoBehaviour
         if (markUpUI != null) markUpUI.SetActive(false);
         if (hazardTape != null) hazardTape.SetActive(false);
 
-        // Auto-find the hazard script if we forgot to drag it in
+        
         if (radiationHazard == null)
         {
             radiationHazard = GetComponent<RadiationHazard>();
@@ -35,7 +35,7 @@ public class BarrelHazard : MonoBehaviour
         if (isMarked) return;
         isMarked = true;
 
-        // 1. VISUALS (Show UI, Tape, etc)
+        
         if (markUpUI != null) markUpUI.SetActive(true);
         if (hazardTape != null) hazardTape.SetActive(true);
 
@@ -44,13 +44,13 @@ public class BarrelHazard : MonoBehaviour
             objectRenderer.material = safeMaterial;
         }
 
-        // 2. AUDIO
+     
         if (audioSource != null && successSound != null)
         {
             audioSource.PlayOneShot(successSound);
         }
 
-        // 3. THE FIX: KILL THE RADIATION
+        
         if (radiationHazard != null)
         {
             // Setting this to 0 means:

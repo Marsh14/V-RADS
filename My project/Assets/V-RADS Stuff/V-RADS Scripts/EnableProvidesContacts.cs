@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// This script enables the "Provides Contacts" feature on a CharacterController component.
 public class EnableProvidesContacts : MonoBehaviour
 {
     void Start()

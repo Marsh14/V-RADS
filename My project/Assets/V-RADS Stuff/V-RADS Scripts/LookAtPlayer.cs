@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// This script makes the attached UI element always face the player's headset
 public class LookAtPlayer : MonoBehaviour
 {
     void Update()

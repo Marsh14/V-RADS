@@ -1,17 +1,18 @@
 using UnityEngine;
 
+// This script manages the individual radiation objects in the game.
 public class RadiationHazard : MonoBehaviour
 {
     [Header("Hazard Data")]
-    public float strength = 100f; // <--- This was missing! 
+    public float strength = 100f; 
     private float initialStrength;
 
     [Header("Prefab Settings")]
-    public GameObject uiPrefab;       // Drag your "Success Canvas" Prefab here
-    public float heightOffset = 1.5f; // How high to spawn the UI
+    public GameObject uiPrefab;       
+    public float heightOffset = 1.5f; 
 
     [Header("Visuals")]
-    public Material safeMaterial;     // The Green Material
+    public Material safeMaterial;     
 
     private bool isFixed = false;
     private Renderer objRenderer;
@@ -47,16 +48,16 @@ public class RadiationHazard : MonoBehaviour
 
         isFixed = true;
 
-        // 1. Kill Radiation
+        // Kill Radiation
         strength = 0f;
 
-        // 2. Change Color
+        // Change Color
         if (objRenderer != null && safeMaterial != null)
         {
             objRenderer.material = safeMaterial;
         }
 
-        // 3. Spawn Success UI (Keep your existing code here)
+        // Spawn Success UI
         if (uiPrefab != null)
         {
             Vector3 spawnPos = transform.position + (Vector3.up * heightOffset);
@@ -64,7 +65,7 @@ public class RadiationHazard : MonoBehaviour
 
         }
 
-        // 4. Play Sound
+        // Play Sound
         if (audioSource != null && audioSource.clip != null)
         {
             audioSource.PlayOneShot(audioSource.clip);
@@ -76,9 +77,10 @@ public class RadiationHazard : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("No HazardManager found!");
+            //Debug.LogWarning("No HazardManager found!");
         }
     }
+    // Called when the game is done to get rid of the indivudal popups so they dont block the success canvas
     public void DestroyPopup()
     {
         if (spawnedUI != null)

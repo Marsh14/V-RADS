@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+// This script manages game state and has functions for the buttons
 public class GameManager : MonoBehaviour
 {
     [Header("Locomotion Components")]
@@ -14,20 +15,19 @@ public class GameManager : MonoBehaviour
 
     public void EndGame()
     {
-        // 1. Disable Joystick Movement
+        // Disable Joystick Movement
         if (moveProvider != null)
         {
             moveProvider.enabled = false;
         }
 
-        // 2. (Optional) Disable Joystick Turning
-        // If you want them to ONLY look with their real head, disable this too.
+        // Disable Joystick Turning
         if (turnProvider != null)
         {
             turnProvider.enabled = false;
         }
 
-        Debug.Log("Player Movement Frozen.");
+        //Debug.Log("Player Movement Frozen.");
     }
     public void RestartGame()
     {
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     }
     public void MenuGame()
     {
+        // Loads the title scene
         SceneManager.LoadScene(gameSceneName);
     }
 }

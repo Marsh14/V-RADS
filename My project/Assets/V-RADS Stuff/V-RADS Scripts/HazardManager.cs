@@ -14,7 +14,7 @@ public class HazardManager : MonoBehaviour
     public TMPro.TMP_Text timeDisplayText; 
 
     [Header("References")]
-    // Drag EVERY potential hazard into this list in the Inspector
+    // List of all possible hazards in the scene
     public List<RadiationHazard> allPotentialHazards;
 
     void Start()
@@ -38,13 +38,13 @@ public class HazardManager : MonoBehaviour
 
     public void RandomizeHazards()
     {
-        // 1. Turn OFF everything first (Safety First)
+        // Turn OFF everything first (Safety First)
         foreach (var hazard in allPotentialHazards)
         {
             hazard.SetActiveHazard(false);
         }
 
-        // 2. Shuffle the list (Fisher-Yates Shuffle Algorithm)
+        // Shuffle the list (Fisher-Yates Shuffle Algorithm)
         // This ensures a truly random selection of hazards (and only O(n) complexity)
         // This mixes up the order of the barrels in our list randomly
         for (int i = 0; i < allPotentialHazards.Count; i++)
@@ -55,7 +55,7 @@ public class HazardManager : MonoBehaviour
             allPotentialHazards[randomIndex] = temp;
         }
 
-        // 3. Activate the first X items in the shuffled list
+        // Activate the first X items in the shuffled list
         // We limit the count so we don't try to activate more hazards than exist
         int count = Mathf.Min(numberOfHazardsToActivate, allPotentialHazards.Count);
 
@@ -68,7 +68,7 @@ public class HazardManager : MonoBehaviour
     public void RegisterFixedHazard()
     {
         hazardsFound++;
-        Debug.Log("Hazards Cleaned: " + hazardsFound + " / " + numberOfHazardsToActivate);
+        //Debug.Log("Hazards Cleaned: " + hazardsFound + " / " + numberOfHazardsToActivate);
 
         if (hazardsFound >= numberOfHazardsToActivate)
         {

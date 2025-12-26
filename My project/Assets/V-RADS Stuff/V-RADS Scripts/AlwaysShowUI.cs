@@ -1,17 +1,14 @@
 using UnityEngine;
-using UnityEngine.UI; // Needed for UI components
+using UnityEngine.UI; 
 
 public class AlwaysShowUI: MonoBehaviour
 {
+    // This script ensures that the UI element this is attached to always renders on top of other objects.
     void Start()
     {
-        // 1. Try to find a standard Image (Panels, Buttons)
         Image img = GetComponent<Image>();
-
-        // 2. If not found, try to find a RawImage (Your Radiation Picture)
         RawImage rawImg = GetComponent<RawImage>();
 
-        // 3. Apply the fix to whichever one we found
         if (img != null)
         {
             img.material = CreateAlwaysOnTopMaterial(img.material);

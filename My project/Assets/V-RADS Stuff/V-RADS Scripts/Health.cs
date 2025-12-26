@@ -2,10 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit.Locomotion;
 
+// This script manages the player's health (max dose of radiation) based on radiation exposure
 public class Health : MonoBehaviour
 {
     [Header("Connections")]
-    public GameManager gameManager; // <--- ADD THIS! 
+    public GameManager gameManager; 
 
     [Header("Health Settings")]
     private List<RadiationHazard> allHazards = new List<RadiationHazard>();
@@ -17,12 +18,11 @@ public class Health : MonoBehaviour
     [Header("UI")]
     public UnityEngine.UI.Slider doseSlider;
     public GameObject gameOverCanvas;
-    // REMOVED: public LocomotionMediator locomotionMediator; (GameManager handles this now)
-
     private bool isGameOver = false;
 
     void Start()
     {
+        // Find all RadiationHazard objects in the scene
         RadiationHazard[] foundHazards = FindObjectsByType<RadiationHazard>(FindObjectsSortMode.None);
         allHazards.AddRange(foundHazards);
     }
@@ -34,6 +34,7 @@ public class Health : MonoBehaviour
         
         float totalIntensity = 0f;
         Vector3 headPos = Camera.main.transform.position;
+        // Use the same formula for the geiger counter to calculate total radiation intensity at the player's head position
         foreach (RadiationHazard hazard in allHazards)
         {
             if (hazard == null) continue;
@@ -42,10 +43,12 @@ public class Health : MonoBehaviour
             totalIntensity += hazard.strength / (dist * dist);
         }
 
+        // Increase current dose based on total intensity and time
         currentDose += totalIntensity * Time.deltaTime;
 
         if (doseSlider != null) doseSlider.value = currentDose / maxDose;
 
+        // If health is depleted, trigger game over
         if (currentDose >= maxDose)
         {
             TriggerGameOver();
@@ -56,7 +59,7 @@ public class Health : MonoBehaviour
     {
         isGameOver = true;
 
-        // 1. Show the UI 
+        // Show the UI 
         if (gameOverCanvas != null)
         {
             gameOverCanvas.SetActive(true);
@@ -66,10 +69,10 @@ public class Health : MonoBehaviour
             gameOverCanvas.transform.Rotate(0, 180, 0);
         }
 
-        // 2. CALL THE OTHER SCRIPT
+        // CALL THE OTHER SCRIPT
         if (gameManager != null)
         {
-            gameManager.EndGame(); // <--- This freezes the player!
+            gameManager.EndGame(); 
         }
     }
 }

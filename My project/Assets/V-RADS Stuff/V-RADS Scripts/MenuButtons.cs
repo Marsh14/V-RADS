@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
 
+// This script handles the menu button actions
 public class MenuButtons : MonoBehaviour
 {
     public string gameSceneName = "V-RADS";
