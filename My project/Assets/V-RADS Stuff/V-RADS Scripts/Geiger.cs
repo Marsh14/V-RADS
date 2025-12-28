@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using TMPro;
 
 // This script simulates a Geiger counter that clicks faster with higher radiation levels
 public class Geiger : MonoBehaviour
@@ -19,6 +20,18 @@ public class Geiger : MonoBehaviour
 
     private float nextClickTime = 0f;
     private XRGrabInteractable grabInteractable;
+    public TMP_Text screenText;
+
+    private float currentDisplayValue = 0f;
+
+    [Header("Calibration")]
+    [Tooltip("Multiplier to convert game units to uSv/h. Tweak this until the numbers look right.")]
+    public float uSvMultiplier = 100.0f;
+
+    [Tooltip("How fast the screen updates. Lower = more laggy/realistic. Try 2.0.")]
+    public float sensorResponsiveness = 2.0f;
+
+    public TMP_Text barGraphText; 
 
     void Awake()
     {
@@ -65,6 +78,45 @@ public class Geiger : MonoBehaviour
 
             float randomFactor = Random.Range(0f, targetDelay * 0.2f);
             nextClickTime = Time.time + targetDelay + randomFactor;
+        }
+        // Calculate a fake radiation number based on click speed or distance
+        // Example: If 10 clicks per second, show "500". If 0, show "0.05".
+        float radiationValue = (totalIntensity * 12.5f) + Random.Range(0.01f, 0.05f);
+
+        if (screenText != null)
+        {
+            // Convert "Game Intensity" to "Real World uSv/h"
+            float targetValue = totalIntensity * uSvMultiplier;
+
+            // Add "Sensor Noise" (Real sensors fluctuate slightly)
+            float noise = Random.Range(0.95f, 1.05f);
+            targetValue *= noise;
+
+            // Smooth the value (Linear Interpolation)
+            currentDisplayValue = Mathf.Lerp(currentDisplayValue, targetValue, Time.deltaTime * sensorResponsiveness);
+
+            // Format and Display
+            screenText.text = currentDisplayValue.ToString("F2") + " uSv/h";
+            if (barGraphText != null)
+            {
+                // What uSv/h value counts as "100% Full Bar"?
+                float maxGraphValue = 5000.0f;
+
+                // Calculate percentage based on the DISPLAYED number
+                float percentFull = currentDisplayValue / maxGraphValue;
+
+                // Convert to bars (0 to 20)
+                int barCount = (int)Mathf.Clamp(percentFull * 20, 0, 20);
+
+                // Create the string
+                string bar = new string('|', barCount);
+                string emptySpace = new string(' ', 20 - barCount);
+
+                barGraphText.text = "[" + bar + emptySpace + "]";
+
+                // Force color to black
+                barGraphText.color = Color.black;
+            }
         }
     }
 

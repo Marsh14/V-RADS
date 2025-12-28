@@ -19,6 +19,7 @@ public class HazardManager : MonoBehaviour
 
     void Start()
     {
+        numberOfHazardsToActivate = GameSettings.HazardCount;
         if (successScreen != null) successScreen.SetActive(false);
         RandomizeHazards();
 
@@ -62,7 +63,7 @@ public class HazardManager : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             allPotentialHazards[i].SetActiveHazard(true);
-            Debug.Log($"Hazard Activated: {allPotentialHazards[i].name}");
+            //Debug.Log($"Hazard Activated: {allPotentialHazards[i].name}");
         }
     }
     public void RegisterFixedHazard()
@@ -98,7 +99,7 @@ public class HazardManager : MonoBehaviour
         if (timeDisplayText != null)
         {
            
-           timeDisplayText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+           timeDisplayText.text = string.Format("It took you {0:00}:{1:00} to identify {2} hazards", minutes, seconds, numberOfHazardsToActivate);
         }
 
         // Show the screen

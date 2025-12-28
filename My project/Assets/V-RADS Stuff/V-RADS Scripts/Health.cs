@@ -22,6 +22,8 @@ public class Health : MonoBehaviour
 
     void Start()
     {
+        maxDose = GameSettings.MaxHealth;
+        currentDose = 0f;
         // Find all RadiationHazard objects in the scene
         RadiationHazard[] foundHazards = FindObjectsByType<RadiationHazard>(FindObjectsSortMode.None);
         allHazards.AddRange(foundHazards);
