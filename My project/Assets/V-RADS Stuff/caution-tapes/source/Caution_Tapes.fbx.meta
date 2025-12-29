@@ -1,24 +1,9 @@
 fileFormatVersion: 2
-guid: ff418e787bf9d1349bbea0f9b8d1c2dd
+guid: 2855e2d85debba34982806c63bba3b35
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Emissive
-    second: {fileID: 2100000, guid: 3eb0c22f7420cb0419f051c7581bcc1d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Metal
-    second: {fileID: 2100000, guid: 612c2cf3f03a03c43a468e9ff6f09586, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: WetConcrete
-    second: {fileID: 2100000, guid: 8078c63d162df314782a3cb1b48e0336, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
