@@ -1,0 +1,7 @@
+# Ignore heavy assets/external packages
+/Assets/RPG_FPS_game_assets_industrial/
+/Assets/Samples/
+/Assets/VRTemplateAssets/
+/Assets/XR/
+/Assets/XRI/
+/Assets/TextMesh Pro/
