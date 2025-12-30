@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class HazardManager : MonoBehaviour
 {
     [Header("Settings")]
-    [Tooltip("How many items should be dangerous this round?")]
     public int numberOfHazardsToActivate = 7;
     public GameObject successScreen;
 
@@ -19,6 +18,7 @@ public class HazardManager : MonoBehaviour
 
     void Start()
     {
+        // Initialize amount of hazards to activate based on title settings
         numberOfHazardsToActivate = GameSettings.HazardCount;
         if (successScreen != null) successScreen.SetActive(false);
         RandomizeHazards();
@@ -57,7 +57,7 @@ public class HazardManager : MonoBehaviour
         }
 
         // Activate the first X items in the shuffled list
-        // We limit the count so we don't try to activate more hazards than exist
+        // We limit the count so we don't try to activate more hazards than exist (even though that shouldn't happen)
         int count = Mathf.Min(numberOfHazardsToActivate, allPotentialHazards.Count);
 
         for (int i = 0; i < count; i++)
@@ -113,7 +113,8 @@ public class HazardManager : MonoBehaviour
         }
         GameObject[] popups = GameObject.FindGameObjectsWithTag("PopupUI");
 
-        
+
+        // Added this because sometimes popups would linger after winning
         foreach (GameObject popup in popups)
         {
             popup.SetActive(false);

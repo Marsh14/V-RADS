@@ -42,6 +42,7 @@ public class RadiationHazard : MonoBehaviour
             isFixed = true;
         }
     }
+    // Called when the player successfully fixes the hazard
     public void FixHazard()
     {
         if (isFixed) return; // If already fixed (or wasn't active), stop here.
@@ -80,7 +81,8 @@ public class RadiationHazard : MonoBehaviour
             //Debug.LogWarning("No HazardManager found!");
         }
     }
-    // Called when the game is done to get rid of the indivudal popups so they dont block the success canvas
+
+    // Called when the game is done to get rid of the indivudal popups so they dont block the success canvas (outdated)
     public void DestroyPopup()
     {
         if (spawnedUI != null)

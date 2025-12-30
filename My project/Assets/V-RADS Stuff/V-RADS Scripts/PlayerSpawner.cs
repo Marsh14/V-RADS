@@ -4,7 +4,6 @@ using System.Collections;
 // This script moves the player to a specified spawn point at the start of the game
 public class PlayerSpawner : MonoBehaviour
 {
-    [Header("Assign in Inspector")]
     public Transform spawnPoint; 
 
     private CharacterController characterController;

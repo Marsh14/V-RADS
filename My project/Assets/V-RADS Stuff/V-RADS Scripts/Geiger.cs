@@ -28,7 +28,7 @@ public class Geiger : MonoBehaviour
     [Tooltip("Multiplier to convert game units to uSv/h")]
     public float uSvMultiplier = 100.0f;
 
-    [Tooltip("How fast the screen updates. Lower = more laggy/realistic")]
+    [Tooltip("How fast the geiger counter screen updates")]
     public float sensorResponsiveness = 2.0f;
 
     public TMP_Text barGraphText; 
@@ -79,8 +79,7 @@ public class Geiger : MonoBehaviour
             float randomFactor = Random.Range(0f, targetDelay * 0.2f);
             nextClickTime = Time.time + targetDelay + randomFactor;
         }
-        // Calculate a fake radiation number based on click speed or distance
-        // Example: If 10 clicks per second, show "500". If 0, show "0.05".
+        // Attempt to simulate small random fluctuations in radiation
         float radiationValue = (totalIntensity * 12.5f) + Random.Range(0.01f, 0.05f);
 
         if (screenText != null)
@@ -92,14 +91,14 @@ public class Geiger : MonoBehaviour
             float noise = Random.Range(0.95f, 1.05f);
             targetValue *= noise;
 
-            // Smooth the value (Linear Interpolation)
+            // Smooth the value
             currentDisplayValue = Mathf.Lerp(currentDisplayValue, targetValue, Time.deltaTime * sensorResponsiveness);
 
             // Format and Display
             screenText.text = currentDisplayValue.ToString("F2") + " uSv/h";
             if (barGraphText != null)
             {
-                // What uSv/h value counts as "100% Full Bar"?
+                // What uSv/h value counts as a full bar
                 float maxGraphValue = 5000.0f;
 
                 // Calculate percentage based on the DISPLAYED number

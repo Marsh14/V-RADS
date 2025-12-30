@@ -32,6 +32,7 @@ public class BarrelHazard : MonoBehaviour
 
     public void MarkAsFound()
     {
+        // Function to run when it was selected
         if (isMarked) return;
         isMarked = true;
 
@@ -39,18 +40,19 @@ public class BarrelHazard : MonoBehaviour
         if (markUpUI != null) markUpUI.SetActive(true);
         if (hazardTape != null) hazardTape.SetActive(true);
 
+        // Change Material to Safe
         if (objectRenderer != null && safeMaterial != null)
         {
             objectRenderer.material = safeMaterial;
         }
 
-     
+        // Play Sound
         if (audioSource != null && successSound != null)
         {
             audioSource.PlayOneShot(successSound);
         }
 
-        
+        // Disable Radiation
         if (radiationHazard != null)
         {
             // Setting this to 0 means:

@@ -17,6 +17,7 @@ public class MenuButtons : MonoBehaviour
     }
     public void StartSimulation()
     {
+        //Switches the start button to loading when clicked
         if (buttonText != null)
         {
             buttonText.text = "Loading...";
@@ -39,21 +40,20 @@ public class MenuButtons : MonoBehaviour
         UpdateUI();
     }
 
+    // Functions that adjust how many hazards are in the scene, and how much health the player has
     public void DecreaseHazards()
     {
+
         GameSettings.HazardCount--;
         if (GameSettings.HazardCount < 1) GameSettings.HazardCount = 1;
         UpdateUI();
     }
-
-    // --- HEALTH BUTTONS ---
     public void IncreaseHealth()
     {
         GameSettings.MaxHealth += 10; // Go up by 10s
         if (GameSettings.MaxHealth > 500) GameSettings.MaxHealth = 500; // Cap at 500
         UpdateUI();
     }
-
     public void DecreaseHealth()
     {
         GameSettings.MaxHealth -= 10;
@@ -61,6 +61,7 @@ public class MenuButtons : MonoBehaviour
         UpdateUI();
     }
 
+    //Updates the UI text elements to reflect current settings
     void UpdateUI()
     {
         if (hazardCountText != null) hazardCountText.text = GameSettings.HazardCount.ToString();

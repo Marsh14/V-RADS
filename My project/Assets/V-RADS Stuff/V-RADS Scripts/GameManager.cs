@@ -5,10 +5,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Locomotion Components")]
-    // Drag your "Continuous Move" object here in the Inspector
     public UnityEngine.XR.Interaction.Toolkit.Locomotion.Movement.ContinuousMoveProvider moveProvider;
-
-    // Optional: Drag "Snap Turn" here if you want to stop them from turning too
     public UnityEngine.XR.Interaction.Toolkit.Locomotion.Turning.SnapTurnProvider turnProvider;
 
     public string gameSceneName = "Title";

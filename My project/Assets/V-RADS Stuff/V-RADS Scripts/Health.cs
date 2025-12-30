@@ -71,7 +71,7 @@ public class Health : MonoBehaviour
             gameOverCanvas.transform.Rotate(0, 180, 0);
         }
 
-        // CALL THE OTHER SCRIPT
+        // Call the endgame function in GameManager
         if (gameManager != null)
         {
             gameManager.EndGame(); 
