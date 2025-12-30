@@ -15,7 +15,7 @@ public class Geiger : MonoBehaviour
     public float maxClickDelay = 3.0f;
     public float minClickDelay = 0.05f;
 
-    [Tooltip("Higher number = Slower clicking for the same radiation. Try 10 or 20.")]
+    [Tooltip("Higher number = Slower clicking for the same radiation")]
     public float sensitivity = 5.0f; 
 
     private float nextClickTime = 0f;
@@ -25,10 +25,10 @@ public class Geiger : MonoBehaviour
     private float currentDisplayValue = 0f;
 
     [Header("Calibration")]
-    [Tooltip("Multiplier to convert game units to uSv/h. Tweak this until the numbers look right.")]
+    [Tooltip("Multiplier to convert game units to uSv/h")]
     public float uSvMultiplier = 100.0f;
 
-    [Tooltip("How fast the screen updates. Lower = more laggy/realistic. Try 2.0.")]
+    [Tooltip("How fast the screen updates. Lower = more laggy/realistic")]
     public float sensorResponsiveness = 2.0f;
 
     public TMP_Text barGraphText; 

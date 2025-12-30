@@ -111,6 +111,13 @@ public class HazardManager : MonoBehaviour
             successScreen.transform.LookAt(head.position);
             successScreen.transform.Rotate(0, 180, 0);
         }
+        GameObject[] popups = GameObject.FindGameObjectsWithTag("PopupUI");
+
+        
+        foreach (GameObject popup in popups)
+        {
+            popup.SetActive(false);
+        }
     }
 
 }

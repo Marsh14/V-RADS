@@ -35,7 +35,7 @@ public class MenuButtons : MonoBehaviour
     {
         GameSettings.HazardCount++;
         // Cap amount of active hazards to 15
-        if (GameSettings.HazardCount > 15) GameSettings.HazardCount = 15;
+        if (GameSettings.HazardCount > 10) GameSettings.HazardCount = 10;
         UpdateUI();
     }
 
